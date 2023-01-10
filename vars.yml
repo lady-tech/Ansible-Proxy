@@ -1,0 +1,13 @@
+########Playbook#############
+docker_username: parshams
+docker_password: 13811411@Edm
+docker_version: 5:20.10.21~3-0~debian-bullseye
+########Nexus###############
+unbound_version: 1.16.0
+########CErtbot#############
+
+#######Nginx#############
+nginx_version: 1.22.1
+nginx_url: https://nexus.viratarh.ir
+nginx_cpu: 2
+nginx_memory: 2G

@@ -1,0 +1,26 @@
+---
+   - name: Include Vars File
+     include_vars: ./vars.yml
+
+   - name: Create Nginx Volume
+     docker_volume:
+       name: nginx-data
+       
+   - name: Copy Nginx Config File
+     copy:
+       src: ./files/nginx.conf
+       dest: /var/lib/docker/volumes/nginx-data/_data/nginx.conf
+
+   - name: Create Nginx Container
+     community.docker.docker_container:
+      name: "nginx-srv"
+      image: nginx:1.22
+      hostname: 5.75.226.122
+      restart_policy: "always"
+      ports:
+       - "443:443"
+       - "80:80"
+      networks:
+       - name: vira
+      volumes:
+       - nginx-data:/etc/nginx/

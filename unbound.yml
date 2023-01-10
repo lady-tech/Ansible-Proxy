@@ -1,0 +1,44 @@
+---
+   - name: Include Vars File
+     include_vars: ./vars.yml
+
+   - name: Create Unbound Volume
+     docker_volume:
+       name: unbound-data
+
+   - name: Create Unbound Container
+     community.docker.docker_container:
+      name: "unbound"
+      image: "mvance/unbound:{{unbound_version}}"
+      hostname: unbound.viratarh.ir
+      ports:
+       - "53:53/tcp"
+       - "53:53/udp"
+      volumes:
+       - unbound-data:/opt/unbound/etc/unbound
+      networks:
+       - name: vira
+
+   - name: Copy Unbound Config Files 
+     copy:
+       src: ./files/unbound.conf
+       dest: /var/lib/docker/volumes/unbound-data/_data/
+       directory_mode: yes
+
+   - name: Copy Unbound Config A Records 
+     copy:
+       src: ./files/a-records.conf
+       dest: /var/lib/docker/volumes/unbound-data/_data/
+       directory_mode: yes
+
+   - name: Copy Unbound Config Zone Records 
+     copy:
+       src: ./files/zone-records.conf
+       dest: /var/lib/docker/volumes/unbound-data/_data/
+       directory_mode: yes       
+
+   - name: Restart
+     docker_container:
+       name: "unbound"
+       state: started
+       restart: yes
